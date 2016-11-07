@@ -15,8 +15,8 @@ typedef client::message_ptr message_ptr;
 
 void on_open(client* s, websocketpp::connection_hdl hdl) {
 
-	std::cout << "on_open called with hdl: " << hdl.lock().get()
-		<< std::endl;
+	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
+		<< std::endl;*/
 
 	try {
 		s->send(hdl, (const void*)"hello", 6, websocketpp::frame::opcode::TEXT);
@@ -28,13 +28,14 @@ void on_open(client* s, websocketpp::connection_hdl hdl) {
 }
 
 void on_close(client* s, websocketpp::connection_hdl hdl) {
-	std::cout << "on_close called with hdl: " << hdl.lock().get()
-		<< std::endl;
+	/*std::cout << "on_close called with hdl: " << hdl.lock().get()
+		<< std::endl;*/
 }
 
 // Define a callback to handle incoming messages
 void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) {
-	std::cout << "on_message called with hdl: " << hdl.lock().get()
+	std::cout << "----------------" << std::endl << msg->get_payload() << std::endl << "----------------" << std::endl;
+	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;
 
@@ -51,7 +52,7 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 	catch (const websocketpp::lib::error_code& e) {
 		std::cout << "Echo failed because: " << e
 			<< "(" << e.message() << ")" << std::endl;
-	}
+	}*/
 }
 
 int main() {

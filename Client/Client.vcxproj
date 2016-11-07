@@ -151,7 +151,7 @@
     <ClCompile Include="..\Shared\SensorData.cxx" />
     <ClCompile Include="..\Shared\SensorSetup.cxx" />
     <ClCompile Include="boost_dependencies.cxx" />
-    <ClCompile Include="main.cxx" />
+    <ClCompile Include="client.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\DeviceSetup.hxx" />

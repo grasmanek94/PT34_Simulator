@@ -7,6 +7,8 @@
 #include <websocketpp/client.hpp>
 #include <websocketpp/server.hpp>
 
+#include <DeviceSetup.hxx>
+
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 using websocketpp::lib::placeholders::_1;
@@ -20,20 +22,30 @@ std::set<websocketpp::connection_hdl::element_type*> clients;
 
 void on_open(server* s, websocketpp::connection_hdl hdl) {
 	clients.insert(hdl.lock().get());
-	std::cout << "on_open called with hdl: " << hdl.lock().get()
-		<< std::endl;
+	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
+		<< std::endl;*/
 
+	DeviceSetup setup;
+	std::string request(setup.GetRequestJson());
 
+	try {
+		s->send(hdl, request.c_str(), request.length() + 1, websocketpp::frame::opcode::TEXT);
+	}
+	catch (const websocketpp::lib::error_code& e) {
+		std::cout << "Echo failed because: " << e
+			<< "(" << e.message() << ")" << std::endl;
+	}
 }
 
 void on_close(server* s, websocketpp::connection_hdl hdl) {
 	clients.erase(hdl.lock().get());
-	std::cout << "on_close called with hdl: " << hdl.lock().get()
-		<< std::endl;
+	/*std::cout << "on_close called with hdl: " << hdl.lock().get()
+		<< std::endl;*/
 }
 
 // Define a callback to handle incoming messages
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+	std::cout << "----------------" << std::endl << msg->get_payload() << std::endl << "----------------" << std::endl;
 	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;

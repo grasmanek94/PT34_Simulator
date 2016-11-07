@@ -1,31 +1,30 @@
 #include <json-develop/src/json.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/client.hpp>
-#include <websocketpp/server.hpp>
 
 #include <iostream>
 
-typedef websocketpp::server<websocketpp::config::asio> server;
+typedef websocketpp::client<websocketpp::config::asio> client;
 
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
 // pull out the type of messages sent by our config
-typedef server::message_ptr message_ptr;
+typedef client::message_ptr message_ptr;
 
-void on_open(server* s, websocketpp::connection_hdl hdl) {
+void on_open(client* s, websocketpp::connection_hdl hdl) {
 	std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;
 }
 
-void on_close(server* s, websocketpp::connection_hdl hdl) {
+void on_close(client* s, websocketpp::connection_hdl hdl) {
 	std::cout << "on_close called with hdl: " << hdl.lock().get()
 		<< std::endl;
 }
 
 // Define a callback to handle incoming messages
-void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 	std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;
@@ -48,30 +47,35 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 
 int main() {
 	// Create a server endpoint
-	server echo_server;
+	client echo_client;
 
 	try {
 		// Set logging settings
-		echo_server.set_access_channels(websocketpp::log::alevel::all);
-		echo_server.clear_access_channels(websocketpp::log::alevel::frame_payload);
+		echo_client.set_access_channels(websocketpp::log::alevel::all);
+		echo_client.clear_access_channels(websocketpp::log::alevel::frame_payload);
 
 		// Initialize Asio
-		echo_server.init_asio();
+		echo_client.init_asio();
 
 		// Register our message handler
-		echo_server.set_message_handler(bind(&on_message, &echo_server, ::_1, ::_2));
+		echo_client.set_message_handler(bind(&on_message, &echo_client, ::_1, ::_2));
 
-		echo_server.set_open_handler(bind(&on_open, &echo_server, ::_1));
-		echo_server.set_close_handler(bind(&on_close, &echo_server, ::_1));
+		echo_client.set_open_handler(bind(&on_open, &echo_client, ::_1));
+		echo_client.set_close_handler(bind(&on_close, &echo_client, ::_1));
 
-		// Listen on port 9002
-		echo_server.listen(9002);
+		websocketpp::lib::error_code ec;
+		std::string uri = "ws://localhost:9002";
 
-		// Start the server accept loop
-		echo_server.start_accept();
+		client::connection_ptr con = echo_client.get_connection(uri, ec);
+		if (ec) {
+			std::cout << "could not create connection because: " << ec.message() << std::endl;
+			return 0;
+		}
+
+		echo_client.connect(con);
 
 		// Start the ASIO io_service run loop
-		echo_server.run();
+		echo_client.run();
 	}
 	catch (websocketpp::exception const & e) {
 		std::cout << e.what() << std::endl;

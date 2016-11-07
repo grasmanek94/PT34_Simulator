@@ -14,8 +14,17 @@ using websocketpp::lib::bind;
 typedef client::message_ptr message_ptr;
 
 void on_open(client* s, websocketpp::connection_hdl hdl) {
+
 	std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;
+
+	try {
+		s->send(hdl, (const void*)"hello", 6, websocketpp::frame::opcode::TEXT);
+	}
+	catch (const websocketpp::lib::error_code& e) {
+		std::cout << "Echo failed because: " << e
+			<< "(" << e.message() << ")" << std::endl;
+	}
 }
 
 void on_close(client* s, websocketpp::connection_hdl hdl) {

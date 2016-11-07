@@ -1,9 +1,11 @@
+#include <set>
+#include <thread>
+#include <iostream>
+
 #include <json-develop/src/json.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/client.hpp>
 #include <websocketpp/server.hpp>
-
-#include <iostream>
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 
@@ -14,19 +16,25 @@ using websocketpp::lib::bind;
 // pull out the type of messages sent by our config
 typedef server::message_ptr message_ptr;
 
+std::set<websocketpp::connection_hdl::element_type*> clients;
+
 void on_open(server* s, websocketpp::connection_hdl hdl) {
+	clients.insert(hdl.lock().get());
 	std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;
+
+
 }
 
 void on_close(server* s, websocketpp::connection_hdl hdl) {
+	clients.erase(hdl.lock().get());
 	std::cout << "on_close called with hdl: " << hdl.lock().get()
 		<< std::endl;
 }
 
 // Define a callback to handle incoming messages
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
-	std::cout << "on_message called with hdl: " << hdl.lock().get()
+	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;
 
@@ -43,7 +51,7 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 	catch (const websocketpp::lib::error_code& e) {
 		std::cout << "Echo failed because: " << e
 			<< "(" << e.message() << ")" << std::endl;
-	}
+	}*/
 }
 
 int main() {
@@ -71,7 +79,14 @@ int main() {
 		echo_server.start_accept();
 
 		// Start the ASIO io_service run loop
-		echo_server.run();
+		while (true)
+		{
+			echo_server.poll();
+
+			// you can do some processing here if needed
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		}
 	}
 	catch (websocketpp::exception const & e) {
 		std::cout << e.what() << std::endl;

@@ -21,39 +21,39 @@
     <ClCompile Include="boost_dependencies.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="server.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SensorData.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SensorServerInfo.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
     <ClCompile Include="..\Shared\SensorSetup.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\DeviceSetup.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\SensorData.cxx">
-      <Filter>Shared</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\Sensor.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\SensorServerInfo.cxx">
-      <Filter>Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="server.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shared\Sensor.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
     <ClInclude Include="..\Shared\SensorData.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\SensorServerInfo.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\SensorSetup.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\DeviceSetup.hxx">
-      <Filter>Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Sensor.hxx">
-      <Filter>Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\SensorServerInfo.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
   </ItemGroup>

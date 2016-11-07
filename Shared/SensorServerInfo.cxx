@@ -5,7 +5,7 @@ SensorServerInfo::SensorServerInfo()
 
 }
 
-SensorServerInfo::SensorServerInfo(SensorType _type, SensorUnit _unit, SensorPlacement _placement, size_t _num_values, Position& _position)
+SensorServerInfo::SensorServerInfo(SensorType _type, SensorUnit _unit, SensorPlacement _placement, size_t _num_values, const Position& _position)
 {
 	type = _type;
 	unit = _unit;

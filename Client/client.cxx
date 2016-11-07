@@ -42,9 +42,9 @@ void on_close(client* s, websocketpp::connection_hdl hdl)
 SensorServerInfo temperature(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, Position{9.0, 10.0, -10.6});
 SensorServerInfo sound(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, Position{ 8.0, 20.0, -10.5 });
 SensorServerInfo weight(SensorTypeWeight, SensorUnitKilograms, SensorPlacementInside, 1, Position{ 7.0, 30.0, -10.4 });
-SensorServerInfo humidity(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, Position{ 6.0, 40.0, -10.3 });
+//SensorServerInfo humidity(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, Position{ 6.0, 40.0, -10.3 });
 SensorServerInfo pressure(SensorTypePressure, SensorUnitPascal, SensorPlacementInside, 1, Position{ 5.0, 50.0, -10.2 });
-SensorServerInfo lightintensity(SensorTypeLightIntensity, SensorUnitLumen, SensorPlacementInside, 1, Position{ 4.0, 60.0, -10.1 });
+//SensorServerInfo lightintensity(SensorTypeLightIntensity, SensorUnitLumen, SensorPlacementInside, 1, Position{ 4.0, 60.0, -10.1 });
 
 // Define a callback to handle incoming messages
 void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) 
@@ -62,9 +62,9 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg)
 		setup.AddSensor(&temperature);
 		setup.AddSensor(&sound);
 		setup.AddSensor(&weight);
-		setup.AddSensor(&humidity);
-		setup.AddSensor(&humidity);
-		setup.AddSensor(&lightintensity);
+		//setup.AddSensor(&humidity);
+		//setup.AddSensor(&humidity);
+		//setup.AddSensor(&lightintensity);
 
 		setup.ParseRequestJson(device_setup->dump());
 		

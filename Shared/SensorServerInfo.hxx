@@ -13,7 +13,7 @@ private:
 
 public:
 	SensorServerInfo();
-	SensorServerInfo(SensorType _type, SensorUnit _unit, SensorPlacement _placement, size_t _num_values, Position& _position);
+	SensorServerInfo(SensorType _type, SensorUnit _unit, SensorPlacement _placement, size_t _num_values, const Position& _position);
 	virtual ~SensorServerInfo();
 
 	virtual SensorType GetSensorType() const;

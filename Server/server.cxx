@@ -20,7 +20,8 @@ typedef server::message_ptr message_ptr;
 
 std::set<websocketpp::connection_hdl::element_type*> clients;
 
-void on_open(server* s, websocketpp::connection_hdl hdl) {
+void on_open(server* s, websocketpp::connection_hdl hdl)
+{
 	clients.insert(hdl.lock().get());
 	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;*/
@@ -37,14 +38,16 @@ void on_open(server* s, websocketpp::connection_hdl hdl) {
 	}
 }
 
-void on_close(server* s, websocketpp::connection_hdl hdl) {
+void on_close(server* s, websocketpp::connection_hdl hdl)
+{
 	clients.erase(hdl.lock().get());
 	/*std::cout << "on_close called with hdl: " << hdl.lock().get()
 		<< std::endl;*/
 }
 
 // Define a callback to handle incoming messages
-void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
+{
 	std::cout << "----------------" << std::endl << msg->get_payload() << std::endl << "----------------" << std::endl;
 	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
@@ -70,7 +73,8 @@ int main() {
 	// Create a server endpoint
 	server echo_server;
 
-	try {
+	try
+	{
 		// Set logging settings
 		echo_server.set_access_channels(websocketpp::log::alevel::all);
 		echo_server.clear_access_channels(websocketpp::log::alevel::frame_payload);
@@ -100,10 +104,12 @@ int main() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 	}
-	catch (websocketpp::exception const & e) {
+	catch (websocketpp::exception const & e) 
+	{
 		std::cout << e.what() << std::endl;
 	}
-	catch (...) {
-		std::cout << "other exception" << std::endl;
+	catch (std::exception const & e) 
+	{
+		std::cout << "other exception: " << e.what() << std::endl;
 	}
 }

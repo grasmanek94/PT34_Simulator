@@ -12,13 +12,16 @@ using websocketpp::lib::bind;
 
 // pull out the type of messages sent by our config
 typedef client::message_ptr message_ptr;
+using json = nlohmann::json;
 
-void on_open(client* s, websocketpp::connection_hdl hdl) {
+void on_open(client* s, websocketpp::connection_hdl hdl)
+{
 
 	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;*/
 
-	try {
+	try
+	{
 		s->send(hdl, (const void*)"hello", 6, websocketpp::frame::opcode::TEXT);
 	}
 	catch (const websocketpp::lib::error_code& e) {
@@ -33,8 +36,15 @@ void on_close(client* s, websocketpp::connection_hdl hdl) {
 }
 
 // Define a callback to handle incoming messages
-void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) {
-	std::cout << "----------------" << std::endl << msg->get_payload() << std::endl << "----------------" << std::endl;
+void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) 
+{
+	json j = json::parse(msg->get_payload().c_str());
+	
+	for (auto& element : j) 
+	{
+		std::cout << "----------------" << std::endl << element << std::endl << "----------------" << std::endl;
+	}
+
 	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;
@@ -55,11 +65,13 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 	}*/
 }
 
-int main() {
+int main() 
+{
 	// Create a server endpoint
 	client echo_client;
 
-	try {
+	try 
+	{
 		// Set logging settings
 		echo_client.set_access_channels(websocketpp::log::alevel::all);
 		echo_client.clear_access_channels(websocketpp::log::alevel::frame_payload);
@@ -77,7 +89,8 @@ int main() {
 		std::string uri = "ws://localhost:9002";
 
 		client::connection_ptr con = echo_client.get_connection(uri, ec);
-		if (ec) {
+		if (ec) 
+		{
 			std::cout << "could not create connection because: " << ec.message() << std::endl;
 			return 0;
 		}
@@ -87,10 +100,12 @@ int main() {
 		// Start the ASIO io_service run loop
 		echo_client.run();
 	}
-	catch (websocketpp::exception const & e) {
+	catch (websocketpp::exception const & e) 
+	{
 		std::cout << e.what() << std::endl;
 	}
-	catch (...) {
-		std::cout << "other exception" << std::endl;
+	catch (std::exception const & e)
+	{
+		std::cout << "other exception: " << e.what() << std::endl;
 	}
 }

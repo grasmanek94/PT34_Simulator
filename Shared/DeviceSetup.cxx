@@ -16,9 +16,12 @@ DeviceSetup::~DeviceSetup()
 
 std::string DeviceSetup::GetRequestJson() const
 {
-	json j;
-	j["GetDeviceSetup"];
-	return j;
+	json j
+	{
+		{ "GetDeviceSetup", {} }
+	};
+
+	return j.dump();
 }
 
 void DeviceSetup::ParseResponseJson(const std::string& json)

@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include <DeviceSetup.hxx>
+#include <SensorServerInfo.hxx>
+
 typedef websocketpp::client<websocketpp::config::asio> client;
 
 using websocketpp::lib::placeholders::_1;
@@ -20,29 +23,62 @@ void on_open(client* s, websocketpp::connection_hdl hdl)
 	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
 		<< std::endl;*/
 
-	try
+	/*try
 	{
 		s->send(hdl, (const void*)"hello", 6, websocketpp::frame::opcode::TEXT);
 	}
 	catch (const websocketpp::lib::error_code& e) {
 		std::cout << "Echo failed because: " << e
 			<< "(" << e.message() << ")" << std::endl;
-	}
+	}*/
 }
 
-void on_close(client* s, websocketpp::connection_hdl hdl) {
+void on_close(client* s, websocketpp::connection_hdl hdl) 
+{
 	/*std::cout << "on_close called with hdl: " << hdl.lock().get()
 		<< std::endl;*/
 }
+
+SensorServerInfo temperature(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, Position{9.0, 10.0, -10.6});
+SensorServerInfo sound(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, Position{ 8.0, 20.0, -10.5 });
+SensorServerInfo weight(SensorTypeWeight, SensorUnitKilograms, SensorPlacementInside, 1, Position{ 7.0, 30.0, -10.4 });
+SensorServerInfo humidity(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, Position{ 6.0, 40.0, -10.3 });
+SensorServerInfo pressure(SensorTypePressure, SensorUnitPascal, SensorPlacementInside, 1, Position{ 5.0, 50.0, -10.2 });
+SensorServerInfo lightintensity(SensorTypeLightIntensity, SensorUnitLumen, SensorPlacementInside, 1, Position{ 4.0, 60.0, -10.1 });
 
 // Define a callback to handle incoming messages
 void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) 
 {
 	json j = json::parse(msg->get_payload().c_str());
-	
-	for (auto& element : j) 
-	{
-		std::cout << "----------------" << std::endl << element << std::endl << "----------------" << std::endl;
+
+	auto device_setup = j.find("GetDeviceSetup");
+	if (device_setup != j.end()) {
+		
+		DeviceSetup setup;
+		setup.SetSerial("CLIENT0001");
+		setup.AddCapability(DeviceCapabilities_3g | DeviceCapabilities_bluetooth30 | DeviceCapabilities_ethernet100m);
+		setup.AddSensor(&temperature);
+		setup.AddSensor(&temperature);
+		setup.AddSensor(&temperature);
+		setup.AddSensor(&sound);
+		setup.AddSensor(&weight);
+		setup.AddSensor(&humidity);
+		setup.AddSensor(&humidity);
+		setup.AddSensor(&lightintensity);
+
+		setup.ParseRequestJson(device_setup->dump());
+		
+		std::string response(setup.GetResponseJson());
+
+		try 
+		{
+			s->send(hdl, response.c_str(), response.length() + 1, websocketpp::frame::opcode::TEXT);
+		}
+		catch (const websocketpp::lib::error_code& e) 
+		{
+			std::cout << "Echo failed because: " << e
+				<< "(" << e.message() << ")" << std::endl;
+		}
 	}
 
 	/*std::cout << "on_message called with hdl: " << hdl.lock().get()

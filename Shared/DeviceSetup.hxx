@@ -41,9 +41,23 @@ public:
 private:
 	std::string serial;
 	sensors_list_t sensors;
+	size_t capabilities;
 public:
 	DeviceSetup();
 	~DeviceSetup();
+
 	std::string GetRequestJson() const;
+	std::string GetResponseJson() const;
+	void ParseRequestJson(const std::string& json);
 	void ParseResponseJson(const std::string& json);
+
+	void SetSerial(const std::string& _serial);
+	std::string GetSerial() const;
+
+	bool AddSensor(Sensor* sensor);
+
+	void AddCapability(size_t capability);
+	void RemoveCapability(size_t capability);
+	bool HasCapability(size_t capability);
+	size_t GetCapabilities();
 };

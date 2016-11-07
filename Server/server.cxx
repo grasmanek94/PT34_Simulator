@@ -9,6 +9,8 @@
 
 #include <DeviceSetup.hxx>
 
+using json = nlohmann::json;
+
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 using websocketpp::lib::placeholders::_1;
@@ -48,7 +50,7 @@ void on_close(server* s, websocketpp::connection_hdl hdl)
 // Define a callback to handle incoming messages
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
-	std::cout << "----------------" << std::endl << msg->get_payload() << std::endl << "----------------" << std::endl;
+	std::cout << "----------------" << std::endl << json::parse(msg->get_payload().c_str()) << std::endl << "----------------" << std::endl;
 	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
 		<< " and message: " << msg->get_payload()
 		<< std::endl;

@@ -58,9 +58,33 @@ std::string DeviceSetup::GetResponseJson() const
 	return j.dump();
 }
 
-void DeviceSetup::ParseResponseJson(const std::string& json)
+void DeviceSetup::ParseResponseJson(const std::string& _json)
 {
+	const json j = json::parse(_json.c_str());
+	auto device_setup = j.find("GetDeviceSetup");
+	if (device_setup != j.end())
+	{
+		auto serial_found = device_setup->find("serial");
+		if (serial_found != device_setup->end())
+		{
+			serial = (*serial_found).get<std::string>();
+		}
+		else
+		{
+			serial = "UNKNOWN";
+		}
 
+		auto devices_found = device_setup->find("devices");
+		sensors.clear();
+		if (devices_found != device_setup->end())
+		{
+			serial = (*serial_found).get<std::string>();
+		}
+		else
+		{
+			serial = "UNKNOWN";
+		}
+	}
 }
 
 void DeviceSetup::SetSerial(const std::string& _serial)

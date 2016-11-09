@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include <json-develop/src/json.hpp>
 
 #include "DeviceSetup.hxx"
@@ -34,17 +36,24 @@ std::string DeviceSetup::GetResponseJson() const
 	json j
 	{
 		{ "GetDeviceSetup",
-			{"serial", serial}
+			{ 
+				{"serial", serial}
+			}
 		}
 	};
+
+	std::unordered_map<std::string, int> c_umap{};
 
 	for (auto& sensor_type : sensors)
 	{
 		if (sensor_type.second.size() > 0)
 		{
-			j["GetDeviceSetup"]["devices"].push_back({ std::to_string(sensor_type.first), sensor_type.second.size() });
+			c_umap[SensorTypeStrings.left.at(sensor_type.first)] = sensor_type.second.size();
 		}
 	}
+
+	j.find("GetDeviceSetup")->push_back({ "devices", c_umap });
+	std::cout << j;
 
 	return j.dump();
 }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <map>
+#include <boost/bimap.hpp>
+#include <boost/assign.hpp>
 
 #include "Sensor.hxx"
 
@@ -32,6 +33,32 @@ enum DeviceCapabilities
 	DeviceCapabilities_bluetooth42 = 1 << 20,
 	DeviceCapabilities_bluetooth5 = 1 << 21
 };
+
+typedef boost::bimap<DeviceCapabilities, std::string> DeviceCapabilitiesStringType;
+const static DeviceCapabilitiesStringType DeviceCapabilitiesStrings = boost::assign::list_of< DeviceCapabilitiesStringType::relation >
+	(DeviceCapabilities_None, "none")
+	(DeviceCapabilities_ethernet10m, "eth10m")
+	(DeviceCapabilities_ethernet100m, "eth100m")
+	(DeviceCapabilities_ethernet1000m, "eth1000m")
+	(DeviceCapabilities_ethernet10gbps, "eth10gbps")
+	(DeviceCapabilities_3g, "3g")
+	(DeviceCapabilities_4g, "4g")
+	(DeviceCapabilities_wifi24ghz80211b, "wifi24ghz80211b")
+	(DeviceCapabilities_wifi24ghz80211g, "wifi24ghz80211g")
+	(DeviceCapabilities_wifi24ghz80211n, "wifi24ghz80211n")
+	(DeviceCapabilities_wifi50ghz80211a, "wifi50ghz80211a")
+	(DeviceCapabilities_wifi50ghz80211, "wifi50ghz80211")
+	(DeviceCapabilities_wifi50ghz80211j, "wifi50ghz80211j")
+	(DeviceCapabilities_wifi50ghz80211n, "wifi50ghz80211n")
+	(DeviceCapabilities_wifi50ghz80211ac, "wifi50ghz80211ac")
+	(DeviceCapabilities_bluetooth20, "bluetooth20")
+	(DeviceCapabilities_bluetooth21, "bluetooth21")
+	(DeviceCapabilities_bluetooth30, "bluetooth30")
+	(DeviceCapabilities_bluetooth31, "bluetooth31")
+	(DeviceCapabilities_bluetooth40, "bluetooth40")
+	(DeviceCapabilities_bluetooth41, "bluetooth41")
+	(DeviceCapabilities_bluetooth42, "bluetooth42")
+	(DeviceCapabilities_bluetooth5, "bluetooth50");
 
 class DeviceSetup
 {

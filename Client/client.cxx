@@ -103,6 +103,23 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg)
 
 int main() 
 {
+	DeviceSetup setup;
+	setup.SetSerial("CLIENT0001");
+	setup.AddCapability(DeviceCapabilities_3g | DeviceCapabilities_bluetooth30 | DeviceCapabilities_ethernet100m);
+	setup.AddSensor(&temperature);
+	setup.AddSensor(&temperature);
+	setup.AddSensor(&temperature);
+	setup.AddSensor(&sound);
+	setup.AddSensor(&weight);
+	//setup.AddSensor(&humidity);
+	//setup.AddSensor(&humidity);
+	//setup.AddSensor(&lightintensity);
+
+	//setup.ParseRequestJson(device_setup->dump());
+
+	std::string response(setup.GetResponseJson());
+	std::cout << std::endl << response << std::endl;
+	return 0;
 	// Create a server endpoint
 	client echo_client;
 

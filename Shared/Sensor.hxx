@@ -65,16 +65,27 @@ struct Position
 
 class Sensor
 {
+private:
+	SensorType type;
+	SensorUnit unit;
+	SensorPlacement placement;
+	size_t num_values;
+	Position position;
+	double min_value;
+	double max_value;
 public:
 	Sensor();
+	Sensor(SensorType _type, SensorUnit _unit, SensorPlacement _placement, size_t _num_values, double min_value, double max_value, const Position& _position);
 	virtual ~Sensor();
 
-	virtual SensorType GetSensorType() const = 0;
-	virtual SensorUnit GetSensorUnit() const = 0;
-	virtual SensorPlacement GetSensorPlacement() const = 0;
+	virtual SensorType GetSensorType() const;
+	virtual SensorUnit GetSensorUnit() const;
+	virtual SensorPlacement GetSensorPlacement() const;
 
-	virtual size_t NumValues() const = 0;
+	virtual size_t NumValues() const;
 	virtual double GetValue(size_t i = 0) const = 0;
 
-	virtual Position GetPosition() const = 0;
+	virtual Position GetPosition() const;
+	virtual double GetMinValue() const;
+	virtual double GetMaxValue() const;
 };

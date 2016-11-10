@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <initializer_list>
 #include <boost/bimap.hpp>
 #include <boost/assign.hpp>
 
@@ -31,7 +32,8 @@ enum DevCapabilities
 	DevCapabilities_bluetooth40 = 1 << 18,
 	DevCapabilities_bluetooth41 = 1 << 19,
 	DevCapabilities_bluetooth42 = 1 << 20,
-	DevCapabilities_bluetooth5 = 1 << 21
+	DevCapabilities_bluetooth5 = 1 << 21,
+	DevCapabilities_MAX = 1 << 22
 };
 
 typedef boost::bimap<DevCapabilities, std::string> DevCapabilitiesStringType;
@@ -71,6 +73,7 @@ private:
 	size_t capabilities;
 public:
 	DeviceSetup();
+	DeviceSetup(const std::string& _serial, size_t capabilities, std::initializer_list<Sensor*> sensors = {});
 	~DeviceSetup();
 
 	std::string GetRequestJson() const;
@@ -85,6 +88,9 @@ public:
 
 	void AddCapability(size_t capability);
 	void RemoveCapability(size_t capability);
-	bool HasCapability(size_t capability);
-	size_t GetCapabilities();
+	bool HasCapability(size_t capability) const;
+	size_t GetCapabilities() const;
+
+	void CleanSensors();
+	Sensor* GetSensor(SensorType type, size_t index = 0) const;
 };

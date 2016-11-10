@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include <DeviceSetup.hxx>
-#include <SensorServerInfo.hxx>
+#include <DummySensor.hxx>
 
 typedef websocketpp::client<websocketpp::config::asio> client;
 
@@ -39,13 +39,6 @@ void on_close(client* s, websocketpp::connection_hdl hdl)
 		<< std::endl;*/
 }
 
-SensorServerInfo temperature(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, Position{9.0, 10.0, -10.6});
-SensorServerInfo sound(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, Position{ 8.0, 20.0, -10.5 });
-SensorServerInfo weight(SensorTypeWeight, SensorUnitKilograms, SensorPlacementInside, 1, Position{ 7.0, 30.0, -10.4 });
-//SensorServerInfo humidity(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, Position{ 6.0, 40.0, -10.3 });
-SensorServerInfo pressure(SensorTypePressure, SensorUnitPascal, SensorPlacementInside, 1, Position{ 5.0, 50.0, -10.2 });
-//SensorServerInfo lightintensity(SensorTypeLightIntensity, SensorUnitLumen, SensorPlacementInside, 1, Position{ 4.0, 60.0, -10.1 });
-
 // Define a callback to handle incoming messages
 void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) 
 {
@@ -54,17 +47,18 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg)
 	auto device_setup = j.find("GetDeviceSetup");
 	if (device_setup != j.end()) {
 		
-		DeviceSetup setup;
-		setup.SetSerial("CLIENT0001");
-		setup.AddCapability(DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m);
-		setup.AddSensor(&temperature);
-		setup.AddSensor(&temperature);
-		setup.AddSensor(&temperature);
-		setup.AddSensor(&sound);
-		setup.AddSensor(&weight);
-		//setup.AddSensor(&humidity);
-		//setup.AddSensor(&humidity);
-		//setup.AddSensor(&lightintensity);
+		DeviceSetup setup(
+			"CLIENT0001",
+			DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m,
+			{
+				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 3.0, 10.0, -10.6 }),
+				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 4.0, 10.0, -10.5 }),
+				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 5.0, 10.0, -10.4 }),
+				new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, -100.0, 200.0, Position{ 6.0, 10.0, -10.3 }),
+				new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 7.0, 10.0, -10.2 }),
+				new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, -100.0, 200.0, Position{ 8.0, 10.0, -10.1 }),
+				new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 9.0, 10.0, -10.0 })
+			});
 
 		setup.ParseRequestJson(device_setup->dump());
 		
@@ -103,17 +97,18 @@ void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg)
 
 int main() 
 {
-	DeviceSetup setup;
-	setup.SetSerial("CLIENT0001");
-	setup.AddCapability(DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m);
-	setup.AddSensor(&temperature);
-	setup.AddSensor(&temperature);
-	setup.AddSensor(&temperature);
-	setup.AddSensor(&sound);
-	setup.AddSensor(&weight);
-	//setup.AddSensor(&humidity);
-	//setup.AddSensor(&humidity);
-	//setup.AddSensor(&lightintensity);
+	DeviceSetup setup(
+		"CLIENT0001",
+		DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m,
+		{
+			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 3.0, 10.0, -10.6 }),
+			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 4.0, 10.0, -10.5 }),
+			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 5.0, 10.0, -10.4 }),
+			new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, -100.0, 200.0, Position{ 6.0, 10.0, -10.3 }),
+			new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 7.0, 10.0, -10.2 }),
+			new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, -100.0, 200.0, Position{ 8.0, 10.0, -10.1 }),
+			new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 9.0, 10.0, -10.0 })
+		});
 
 	//setup.ParseRequestJson(device_setup->dump());
 

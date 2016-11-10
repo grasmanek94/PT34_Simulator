@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="..\Shared\DeviceSetup.cxx" />
     <ClCompile Include="..\Shared\DummySensor.cxx" />
+    <ClCompile Include="..\Shared\FirmwareInfo.cxx" />
     <ClCompile Include="..\Shared\Sensor.cxx" />
     <ClCompile Include="..\Shared\SensorData.cxx" />
     <ClCompile Include="..\Shared\SensorSetup.cxx" />
@@ -162,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="..\Shared\DeviceSetup.hxx" />
     <ClInclude Include="..\Shared\DummySensor.hxx" />
+    <ClInclude Include="..\Shared\FirmwareInfo.hxx" />
     <ClInclude Include="..\Shared\Sensor.hxx" />
     <ClInclude Include="..\Shared\SensorData.hxx" />
     <ClInclude Include="..\Shared\SensorSetup.hxx" />

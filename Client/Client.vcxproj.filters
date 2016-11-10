@@ -39,6 +39,9 @@
     <ClCompile Include="..\Shared\DummySensor.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\FirmwareInfo.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Sensor.hxx">
@@ -54,6 +57,9 @@
       <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\DummySensor.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\FirmwareInfo.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
   </ItemGroup>

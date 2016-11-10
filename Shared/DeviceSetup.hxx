@@ -71,6 +71,7 @@ private:
 	std::string serial;
 	sensors_list_t sensors;
 	size_t capabilities;
+	const static size_t protocol_revision = 2;
 public:
 	DeviceSetup();
 	DeviceSetup(const std::string& _serial, size_t capabilities, std::initializer_list<Sensor*> sensors = {});

@@ -105,6 +105,7 @@ std::string DeviceSetup::GetResponseJson() const
 	}
 
 	j.find("GetDeviceSetup")->push_back({ "capabilities", capabilities });
+	j.find("GetDeviceSetup")->push_back({ "protocol", protocol_revision });
 
 	return j.dump();
 }

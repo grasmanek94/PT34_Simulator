@@ -5,8 +5,8 @@
 #include <initializer_list>
 #include <boost/bimap.hpp>
 #include <boost/assign.hpp>
-#include "JSONable.hxx"
 
+#include "JSONable.hxx"
 #include "Sensor.hxx"
 #include "FirmwareInfo.hxx"
 

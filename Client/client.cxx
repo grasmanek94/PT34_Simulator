@@ -6,6 +6,7 @@
 
 #include <DeviceSetup.hxx>
 #include <DummySensor.hxx>
+#include <HostFileReader.hxx>
 
 typedef websocketpp::client<websocketpp::config::asio> client;
 
@@ -19,103 +20,66 @@ using json = nlohmann::json;
 
 void on_open(client* s, websocketpp::connection_hdl hdl)
 {
-
-	/*std::cout << "on_open called with hdl: " << hdl.lock().get()
-		<< std::endl;*/
-
-	/*try
-	{
-		s->send(hdl, (const void*)"hello", 6, websocketpp::frame::opcode::TEXT);
-	}
-	catch (const websocketpp::lib::error_code& e) {
-		std::cout << "Echo failed because: " << e
-			<< "(" << e.message() << ")" << std::endl;
-	}*/
+	std::cout << "CONNECTED to server" << std::endl;
 }
 
 void on_close(client* s, websocketpp::connection_hdl hdl) 
 {
-	/*std::cout << "on_close called with hdl: " << hdl.lock().get()
-		<< std::endl;*/
+	std::cout << "DISCONNECTED from server" << std::endl;
 }
+
+DeviceSetup setup(
+	"CLIENT0001",
+	DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m,
+	{
+		new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 3.0, 10.0, -10.6 }),
+		new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 4.0, 10.0, -10.5 }),
+		new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 5.0, 10.0, -10.4 }),
+		new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, -100.0, 200.0, Position{ 6.0, 10.0, -10.3 }),
+		new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 7.0, 10.0, -10.2 }),
+		new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, -100.0, 200.0, Position{ 8.0, 10.0, -10.1 }),
+		new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 9.0, 10.0, -10.0 })
+	});
 
 // Define a callback to handle incoming messages
 void on_message(client* s, websocketpp::connection_hdl hdl, message_ptr msg) 
 {
+	std::cout << "Received a message from the server: \"" << msg->get_payload() << "\"" << std::endl;
+
 	json j = json::parse(msg->get_payload().c_str());
 
 	auto device_setup = j.find("GetDeviceSetup");
-	if (device_setup != j.end()) {
-		
-		DeviceSetup setup(
-			"CLIENT0001",
-			DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m,
-			{
-				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 3.0, 10.0, -10.6 }),
-				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 4.0, 10.0, -10.5 }),
-				new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 5.0, 10.0, -10.4 }),
-				new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, -100.0, 200.0, Position{ 6.0, 10.0, -10.3 }),
-				new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 7.0, 10.0, -10.2 }),
-				new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, -100.0, 200.0, Position{ 8.0, 10.0, -10.1 }),
-				new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 9.0, 10.0, -10.0 })
-			});
+	if (device_setup != j.end()) 
+	{	
+		std::cout << "GetDeviceSetup found" << std::endl;
 
 		setup.ParseRequestJson(device_setup->dump());
-		
+
+		std::cout << "GetDeviceSetup parsed" << std::endl;
+
 		std::string response(setup.GetResponseJson());
+
+		std::cout << "GetDeviceSetup response" << std::endl;
 
 		try 
 		{
 			s->send(hdl, response.c_str(), response.length() + 1, websocketpp::frame::opcode::TEXT);
+			std::cout << "Send websocket message succesfully: \"" << response << "\"" << std::endl;
 		}
 		catch (const websocketpp::lib::error_code& e) 
 		{
-			std::cout << "Echo failed because: " << e
+			std::cout << "WebSocket response failed because: " << e
 				<< "(" << e.message() << ")" << std::endl;
 		}
 	}
-
-	/*std::cout << "on_message called with hdl: " << hdl.lock().get()
-		<< " and message: " << msg->get_payload()
-		<< std::endl;
-
-	// check for a special command to instruct the server to stop listening so
-	// it can be cleanly exited.
-	if (msg->get_payload() == "stop-listening") {
-		s->stop_listening();
-		return;
-	}
-
-	try {
-		s->send(hdl, msg->get_payload(), msg->get_opcode());
-	}
-	catch (const websocketpp::lib::error_code& e) {
-		std::cout << "Echo failed because: " << e
-			<< "(" << e.message() << ")" << std::endl;
-	}*/
 }
 
 int main() 
 {
-	DeviceSetup setup(
-		"CLIENT0001",
-		DevCapabilities_3g | DevCapabilities_bluetooth30 | DevCapabilities_ethernet100m,
-		{
-			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 3.0, 10.0, -10.6 }),
-			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementInside, 1, -100.0, 200.0, Position{ 4.0, 10.0, -10.5 }),
-			new DummySensor(SensorTypeTemperature, SensorUnitDegreesCelsius, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 5.0, 10.0, -10.4 }),
-			new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementInside, 1, -100.0, 200.0, Position{ 6.0, 10.0, -10.3 }),
-			new DummySensor(SensorTypeHumidity, SensorUnitPercent, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 7.0, 10.0, -10.2 }),
-			new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementInside, 1, -100.0, 200.0, Position{ 8.0, 10.0, -10.1 }),
-			new DummySensor(SensorTypeSound, SensorUnitDecibel, SensorPlacementOutside, 1, -100.0, 200.0, Position{ 9.0, 10.0, -10.0 })
-		});
+	HostFileReader host;
 
-	//setup.ParseRequestJson(device_setup->dump());
+	std::string response(setup.GetRequestJson());
 
-	std::string response(setup.GetResponseJson());
-	setup.ParseResponseJson(response);
-	std::cout << std::endl << response << std::endl;
-	return 0;
 	// Create a server endpoint
 	client echo_client;
 
@@ -135,12 +99,11 @@ int main()
 		echo_client.set_close_handler(bind(&on_close, &echo_client, ::_1));
 
 		websocketpp::lib::error_code ec;
-		std::string uri = "ws://localhost:9002";
 
-		client::connection_ptr con = echo_client.get_connection(uri, ec);
+		client::connection_ptr con = echo_client.get_connection(host.GetHost(), ec);
 		if (ec) 
 		{
-			std::cout << "could not create connection because: " << ec.message() << std::endl;
+			std::cout << "could not create connection to \"" << host.GetHost() << "\" because: " << ec.message() << std::endl;
 			return 0;
 		}
 
@@ -155,6 +118,11 @@ int main()
 	}
 	catch (std::exception const & e)
 	{
-		std::cout << "other exception: " << e.what() << std::endl;
+		std::cout << "unknown exception occurred: " << e.what() << std::endl;
 	}
+
+	std::cout << "Press return key to exit...";
+	std::string s;
+	getline(std::cin, s);
+	return 0;
 }

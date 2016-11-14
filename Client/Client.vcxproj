@@ -155,6 +155,7 @@
     <ClCompile Include="..\Shared\DummySensor.cxx" />
     <ClCompile Include="..\Shared\ExecCommand.cxx" />
     <ClCompile Include="..\Shared\FirmwareInfo.cxx" />
+    <ClCompile Include="..\Shared\HostFileReader.cxx" />
     <ClCompile Include="..\Shared\JSONable.cxx" />
     <ClCompile Include="..\Shared\Sensor.cxx" />
     <ClCompile Include="..\Shared\SensorData.cxx" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\Shared\DummySensor.hxx" />
     <ClInclude Include="..\Shared\ExecCommand.hxx" />
     <ClInclude Include="..\Shared\FirmwareInfo.hxx" />
+    <ClInclude Include="..\Shared\HostFileReader.hxx" />
     <ClInclude Include="..\Shared\JSONable.hxx" />
     <ClInclude Include="..\Shared\Sensor.hxx" />
     <ClInclude Include="..\Shared\SensorData.hxx" />

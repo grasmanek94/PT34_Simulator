@@ -1,6 +1,6 @@
 #include <unordered_map>
-
-#include <json-develop/src/json.hpp>
+#include <boost/filesystem.hpp>
+using namespace boost::filesystem;
 
 #include "DeviceSetup.hxx"
 
@@ -43,11 +43,21 @@ void DeviceSetup::ParseRequestJson(const std::string& json)
 
 std::string DeviceSetup::GetResponseJson() const
 {
+	space_info si = space(".");
+
 	json j
 	{
 		{ "GetDeviceSetup",
-			{ 
-				{"serial", serial}
+			{
+				{"serial", serial},
+				{"firmware", {
+					{"server",{
+						{"os", fwinfo.GetOSInfo()},
+						{"free", si.available / (1024 * 1024) }}},
+					{"measurement",{
+						{"version", fwinfo.GetMeasurementInfo() }}
+					}
+				}}
 			}
 		}
 	};

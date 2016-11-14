@@ -24,16 +24,28 @@
     <ClCompile Include="server.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\Sensor.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
     <ClCompile Include="..\Shared\SensorData.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SensorSetup.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\DeviceSetup.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\Sensor.cxx">
+    <ClCompile Include="..\Shared\DummySensor.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\DummySensor.cxx">
+    <ClCompile Include="..\Shared\ExecCommand.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\FirmwareInfo.cxx">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\JSONable.cxx">
       <Filter>Shared</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +56,22 @@
     <ClInclude Include="..\Shared\SensorData.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
+    <ClInclude Include="..\Shared\SensorSetup.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
     <ClInclude Include="..\Shared\DeviceSetup.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\DummySensor.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\ExecCommand.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\FirmwareInfo.hxx">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\JSONable.hxx">
       <Filter>Shared</Filter>
     </ClInclude>
   </ItemGroup>

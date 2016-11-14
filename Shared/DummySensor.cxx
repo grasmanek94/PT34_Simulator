@@ -18,5 +18,5 @@ DummySensor::~DummySensor()
 
 double DummySensor::GetValue(size_t i) const
 {
-	return (GetMaxValue() + GetMinValue()) / 2.0;
+	return GetMinValue() + ((double)(rand() % (int)(GetMaxValue() - GetMinValue())));
 }

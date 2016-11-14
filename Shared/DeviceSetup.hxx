@@ -5,8 +5,10 @@
 #include <initializer_list>
 #include <boost/bimap.hpp>
 #include <boost/assign.hpp>
+#include "JSONable.hxx"
 
 #include "Sensor.hxx"
+#include "FirmwareInfo.hxx"
 
 enum DevCapabilities
 {
@@ -62,7 +64,7 @@ const static DevCapabilitiesStringType DevCapabilitiesStrings = boost::assign::l
 	(DevCapabilities_bluetooth42, "bluetooth42")
 	(DevCapabilities_bluetooth5, "bluetooth50");
 
-class DeviceSetup
+class DeviceSetup : public JSONable
 {
 public:
 	using sensors_container_t = std::vector<Sensor*>;
@@ -72,15 +74,11 @@ private:
 	sensors_list_t sensors;
 	size_t capabilities;
 	const static size_t protocol_revision = 2;
+	FirmwareInfo fwinfo;
 public:
 	DeviceSetup();
 	DeviceSetup(const std::string& _serial, size_t capabilities, std::initializer_list<Sensor*> sensors = {});
 	~DeviceSetup();
-
-	std::string GetRequestJson() const;
-	std::string GetResponseJson() const;
-	void ParseRequestJson(const std::string& json);
-	void ParseResponseJson(const std::string& json);
 
 	void SetSerial(const std::string& _serial);
 	std::string GetSerial() const;
@@ -94,4 +92,9 @@ public:
 
 	void CleanSensors();
 	Sensor* GetSensor(SensorType type, size_t index = 0) const;
+
+	virtual std::string GetRequestJson() const;
+	virtual std::string GetResponseJson() const;
+	virtual void ParseRequestJson(const std::string& json);
+	virtual void ParseResponseJson(const std::string& json);
 };
